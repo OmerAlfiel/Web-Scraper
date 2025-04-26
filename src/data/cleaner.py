@@ -41,7 +41,8 @@ def clean_data(raw_data):
         columns = [
             'Project Name', 'Project Location', 'Project Type', 
             'Contact Name', 'Mobile Number', 'Source URL', 
-            'Extraction Date', 'Data Quality Score'
+            'Extraction Date', 'Extraction Status', 'Extraction Method', 
+            'Fallback Notes', 'Data Quality Score'
         ]
         
         # Only include columns that exist in df

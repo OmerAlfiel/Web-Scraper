@@ -18,7 +18,7 @@ from utils.scheduler import setup_scheduler
 from config.settings import EMAIL_CONFIG, LOGGING_CONFIG
 
 # Create necessary directories first
-os.makedirs('data', exist_ok=True)
+os.makedirs('collected_data', exist_ok=True)
 os.makedirs('logs', exist_ok=True)
 os.makedirs(os.path.dirname(LOGGING_CONFIG['log_file']), exist_ok=True)
 
@@ -41,11 +41,20 @@ def main():
         # Step 1: Collect data from websites
         logging.info("Collecting data from websites...")
         raw_data = collect_data()
-        logging.info(f"Collected data from {len(raw_data)} websites")
         
         if not raw_data:
             logging.warning("No data collected. Exiting process.")
             return
+        
+        # Display statistics about the data collection
+        success_count = sum(1 for item in raw_data if item.get('Extraction Status') == 'Success - Live Data')
+        failed_count = sum(1 for item in raw_data if item.get('Extraction Status') == 'Failed - Using Metadata Only')
+        partial_count = len(raw_data) - success_count - failed_count
+        
+        logging.info(f"Collected data from {len(raw_data)} websites:")
+        logging.info(f"  - {success_count} successful extractions")
+        logging.info(f"  - {partial_count} partial extractions with some metadata")
+        logging.info(f"  - {failed_count} failed extractions (using metadata only)")
         
         # Step 2: Clean and organize the data
         logging.info("Cleaning and organizing data...")

@@ -50,6 +50,7 @@ class WebScraper:
             
             logging.info(f"Fetching data from {name} ({url})")
             
+            extraction_successful = False
             for attempt in range(max_retries):
                 try:
                     response = requests.get(
@@ -62,36 +63,35 @@ class WebScraper:
                     # Extract data
                     data = self.extract_data(response.text, url, metadata)
                     if data:
+                        # Add extraction status field
+                        data["Extraction Status"] = "Success - Live Data"
                         collected_data.append(data)
                         logging.info(f"Successfully collected data from {name}")
+                        extraction_successful = True
+                        break  # Exit retry loop on success
                     else:
                         logging.warning(f"No data extracted from {name}")
-                    
-                    # Break the retry loop if successful
-                    break
                     
                 except requests.RequestException as e:
                     logging.error(f"Attempt {attempt+1}/{max_retries} failed for {name}: {str(e)}")
                     if attempt < max_retries - 1:
                         # Wait before retrying (with exponential backoff)
                         time.sleep(2 ** attempt)
-                    else:
-                        logging.error(f"Failed to fetch data from {name} after {max_retries} attempts: {str(e)}")
-                        
-                        # Use metadata as fallback data when website is unreachable
-                        if metadata:
-                            fallback_data = {
-                                "Project Name": metadata.get('name', name),
-                                "Project Location": metadata.get('location', 'Unknown'),
-                                "Project Type": metadata.get('type', 'Unknown'),
-                                "Contact Name": metadata.get('contact_name', 'Unknown'),
-                                "Mobile Number": metadata.get('mobile_number', 'Not available'),
-                                "Source URL": url,
-                                "Extraction Date": time.strftime("%Y-%m-%d %H:%M:%S"),
-                                "Status": "Unavailable - Using Metadata Only"
-                            }
-                            collected_data.append(fallback_data)
-                            logging.warning(f"Using metadata fallback for {name} due to connection failure")
+            
+            # If extraction failed after all retries, use metadata as fallback
+            if not extraction_successful:
+                logging.warning(f"Using metadata fallback for {name}")
+                fallback_data = {
+                    "Project Name": metadata.get('name', name),
+                    "Project Location": metadata.get('location', 'Unknown'),
+                    "Project Type": metadata.get('type', 'Unknown'),
+                    "Contact Name": metadata.get('contact_name', 'Unknown'),
+                    "Mobile Number": metadata.get('mobile_number', 'Not available'),
+                    "Source URL": url,
+                    "Extraction Date": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "Extraction Status": "Failed - Using Metadata Only"
+                }
+                collected_data.append(fallback_data)
         
         return collected_data
     
@@ -111,13 +111,24 @@ class WebScraper:
         domain = urlparse(url).netloc
         
         # Try to extract data using custom extraction logic for known domains
+        extracted_data = None
+        extraction_method = "Generic"
+        
         if domain == 'www.sudancar.com':
-            return self.extract_from_sudancar(soup, url, metadata)
+            extracted_data = self.extract_from_sudancar(soup, url, metadata)
+            extraction_method = "Sudancar"
         elif 'github.com' in domain:
-            return self.extract_from_github(soup, url, metadata)
+            extracted_data = self.extract_from_github(soup, url, metadata)
+            extraction_method = "GitHub"
         else:
             # Use generic extraction
-            return self.extract_generic(soup, url, metadata)
+            extracted_data = self.extract_generic(soup, url, metadata)
+        
+        # Add extraction method to data
+        if extracted_data:
+            extracted_data["Extraction Method"] = extraction_method
+        
+        return extracted_data
     
     def extract_generic(self, soup, url, metadata=None):
         """
@@ -134,14 +145,45 @@ class WebScraper:
         # Use the metadata if provided (fallback data)
         metadata = metadata or {}
         
-        # Try to extract project name
-        project_name = self.get_project_name(soup) or metadata.get('name')
+        # Track which fields used metadata fallback
+        fallback_fields = []
         
-        # Other fields
-        project_location = self.get_project_location(soup) or metadata.get('location')
-        project_type = self.get_project_type(soup) or metadata.get('type')
-        contact_name = self.get_contact_name(soup) or metadata.get('contact_name')
-        mobile_number = self.get_mobile_number(soup) or metadata.get('mobile_number')
+        # Try to extract project name
+        project_name = self.get_project_name(soup)
+        if not project_name:
+            project_name = metadata.get('name')
+            if project_name:
+                fallback_fields.append("Project Name")
+        
+        # Other fields with fallback tracking
+        project_location = self.get_project_location(soup)
+        if not project_location:
+            project_location = metadata.get('location')
+            if project_location:
+                fallback_fields.append("Project Location")
+        
+        project_type = self.get_project_type(soup)
+        if not project_type:
+            project_type = metadata.get('type')
+            if project_type:
+                fallback_fields.append("Project Type")
+        
+        contact_name = self.get_contact_name(soup)
+        if not contact_name:
+            contact_name = metadata.get('contact_name')
+            if contact_name:
+                fallback_fields.append("Contact Name")
+        
+        mobile_number = self.get_mobile_number(soup)
+        if not mobile_number:
+            mobile_number = metadata.get('mobile_number')
+            if mobile_number:
+                fallback_fields.append("Mobile Number")
+        
+        # Create fallback notes
+        fallback_notes = ""
+        if fallback_fields:
+            fallback_notes = f"Metadata used for: {', '.join(fallback_fields)}"
         
         # Return the extracted data
         return {
@@ -151,7 +193,8 @@ class WebScraper:
             "Contact Name": contact_name,
             "Mobile Number": mobile_number,
             "Source URL": url,
-            "Extraction Date": time.strftime("%Y-%m-%d %H:%M:%S")
+            "Extraction Date": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "Fallback Notes": fallback_notes
         }
     
     def extract_from_sudancar(self, soup, url, metadata=None):

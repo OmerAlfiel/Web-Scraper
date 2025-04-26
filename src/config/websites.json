@@ -1,16 +1,6 @@
 {
   "websites": [
     {
-      "name": "Google Search",
-      "url": "https://www.google.com",
-      "metadata": {
-        "type": "Search Engine",
-        "location": "Global",
-        "contact_name": "Google LLC",
-        "mobile_number": "+1-650-253-0000"
-      }
-    },
-    {
       "name": "Bing",
       "url": "https://www.bing.com",
       "metadata": {
@@ -281,5 +271,83 @@
         "mobile_number": "+1-415-268-1234"
       }
     }
+    ,
+    {
+      "name": "Craigslist",
+      "url": "https://www.craigslist.org",
+      "metadata": {
+        "type": "Classifieds",
+        "location": "Global",
+        "contact_name": "Craigslist, Inc.",
+        "mobile_number": "+1-415-399-5350"
+      }
+    }
+    ,
+    {
+      "name": "LinkedIn Learning",
+      "url": "https://www.linkedin.com/learning",
+      "metadata": {
+        "type": "Online Learning",
+        "location": "Global",
+        "contact_name": "LinkedIn Corporation",
+        "mobile_number": "+1-650-687-3600"
+      }
+    }
+    ,
+    {
+      "name": "Coursera",
+      "url": "https://www.coursera.org",
+      "metadata": {
+        "type": "Online Learning",
+        "location": "Global",
+        "contact_name": "Coursera Inc.",
+        "mobile_number": "+1-650-206-0000"
+      }
+    }
+    ,
+    {
+      "name": "Udemy",
+      "url": "https://www.udemy.com",
+      "metadata": {
+        "type": "Online Learning",
+        "location": "Global",
+        "contact_name": "Udemy, Inc.",
+        "mobile_number": "+1-415-813-1710"
+      }
+    }
+    ,
+    {
+      "name": "Khan Academy",
+      "url": "https://www.khanacademy.org",
+      "metadata": {
+        "type": "Online Learning",
+        "location": "Global",
+        "contact_name": "Khan Academy, Inc.",
+        "mobile_number": "+1-650-260-9990"
+      }
+    }
+    ,
+    {
+      "name": "edX",
+      "url": "https://www.edx.org",
+      "metadata": {
+        "type": "Online Learning",
+        "location": "Global",
+        "contact_name": "edX Inc.",
+        "mobile_number": "+1-617-588-9000"
+      }
+    }
+    ,
+    {
+      "name": "Skillshare",
+      "url": "https://www.skillshare.com",
+      "metadata": {
+        "type": "Online Learning",
+        "location": "Global",
+        "contact_name": "Skillshare, Inc.",
+        "mobile_number": "+1-646-568-7700"
+      }
+    }
   ]
+
 }

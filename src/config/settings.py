@@ -36,7 +36,7 @@ EXCEL_CONFIG = {
     'output_file': os.getenv('EXCEL_OUTPUT_FILE', 'scraped_data.xlsx'),  # Name of the output Excel file
     'sheet_name': os.getenv('EXCEL_SHEET_NAME', 'Projects'),             # Name of the sheet in the Excel file
     'use_timestamp': os.getenv('EXCEL_USE_TIMESTAMP', 'False').lower() == 'true',  # Add timestamp to filename
-    'output_dir': os.getenv('EXCEL_OUTPUT_DIR', 'data')                  # Directory to save Excel files
+    'output_dir': os.getenv('EXCEL_OUTPUT_DIR', 'collected_data')                  # Directory to save Excel files
 }
 
 # Logging configuration

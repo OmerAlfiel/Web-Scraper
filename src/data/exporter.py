@@ -64,7 +64,8 @@ def save_to_excel(data, file_path, sheet_name=None):
             if r_idx == 0:
                 apply_header_style(worksheet, len(row))
             else:
-                apply_row_style(worksheet, r_idx + 1, len(row), r_idx % 2 == 0)
+                status = row[data.columns.get_loc('Extraction Status')] if 'Extraction Status' in data.columns else None
+                apply_row_style(worksheet, r_idx + 1, len(row), r_idx % 2 == 0, status)
         
         # Adjust column widths
         for column in worksheet.columns:
@@ -101,10 +102,45 @@ def apply_header_style(worksheet, num_columns):
         cell.alignment = header_alignment
         
 
-def apply_row_style(worksheet, row_idx, num_columns, is_alternate_row):
+def apply_row_style(worksheet, row_idx, num_columns, is_alternate_row, status=None):
     """Apply styling to data rows."""
-    # Define alternating row colors
-    if is_alternate_row:
+    cell_value = worksheet.cell(row=row_idx, column=1).value
+    
+    # Check if this is a timestamp header row
+    if cell_value and isinstance(cell_value, str) and "--- Data Collected on" in cell_value:
+        # Style for timestamp header - dark blue with white text
+        fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+        font = Font(bold=True, color="FFFFFF", size=12)
+        alignment = Alignment(horizontal="center", vertical="center")
+        border = Border(
+            left=Side(style='medium', color='000000'),
+            right=Side(style='medium', color='000000'),
+            top=Side(style='medium', color='000000'),
+            bottom=Side(style='medium', color='000000')
+        )
+        
+        # Apply styles to the full row
+        for col in range(1, num_columns + 1):
+            cell = worksheet.cell(row=row_idx, column=col)
+            cell.fill = fill
+            cell.font = font
+            cell.alignment = alignment
+            cell.border = border
+            
+        # Merge the cells for the timestamp row if there are multiple columns
+        if num_columns > 1:
+            worksheet.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=num_columns)
+        
+        return
+
+    # Normal row styling as before
+    if status and "Failed" in status:
+        # Light red for failed extractions
+        fill = PatternFill(start_color="FFCCCC", end_color="FFCCCC", fill_type="solid")
+    elif status and "Metadata" in status:
+        # Light yellow for partial metadata usage
+        fill = PatternFill(start_color="FFFFCC", end_color="FFFFCC", fill_type="solid")
+    elif is_alternate_row:
         fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
     else:
         fill = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")
@@ -138,35 +174,23 @@ def add_metadata_worksheet(workbook, data):
     # Add record count
     metadata_sheet.append(["Total Records:", len(data)])
     
-    # Add summary statistics if available
-    if 'Project Type' in data.columns:
+    # Add extraction status summary
+    if 'Extraction Status' in data.columns:
         metadata_sheet.append([])
-        metadata_sheet.append(["Project Type Distribution:"])
-        type_counts = data['Project Type'].value_counts().reset_index()
-        type_counts.columns = ['Project Type', 'Count']
+        metadata_sheet.append(["Extraction Status Summary:"])
+        status_counts = data['Extraction Status'].value_counts().reset_index()
+        status_counts.columns = ['Extraction Status', 'Count']
         
-        metadata_sheet.append(["Project Type", "Count"])
-        for _, row in type_counts.iterrows():
-            metadata_sheet.append([row['Project Type'], row['Count']])
+        metadata_sheet.append(["Extraction Status", "Count"])
+        for _, row in status_counts.iterrows():
+            metadata_sheet.append([row['Extraction Status'], row['Count']])
     
-    # Add location distribution if available
-    if 'Project Location' in data.columns:
-        metadata_sheet.append([])
-        metadata_sheet.append(["Project Location Distribution:"])
-        location_counts = data['Project Location'].value_counts().reset_index()
-        location_counts.columns = ['Project Location', 'Count']
-        
-        metadata_sheet.append(["Project Location", "Count"])
-        for _, row in location_counts.iterrows():
-            metadata_sheet.append([row['Project Location'], row['Count']])
-    
-    # Add data quality summary if available
-    if 'Data Quality Score' in data.columns:
-        metadata_sheet.append([])
-        metadata_sheet.append(["Data Quality Summary:"])
-        metadata_sheet.append(["Average Quality Score:", data['Data Quality Score'].mean()])
-        metadata_sheet.append(["Minimum Quality Score:", data['Data Quality Score'].min()])
-        metadata_sheet.append(["Maximum Quality Score:", data['Data Quality Score'].max()])
+    # Add legend
+    metadata_sheet.append([])
+    metadata_sheet.append(["Color Legend:"])
+    metadata_sheet.append(["White/Blue", "Successfully extracted data"])
+    metadata_sheet.append(["Yellow", "Partial data from metadata"])
+    metadata_sheet.append(["Red", "Failed extraction - using metadata only"])
     
     # Adjust column widths
     for column in metadata_sheet.columns:
@@ -182,24 +206,12 @@ def add_metadata_worksheet(workbook, data):
 def export_to_excel(data):
     """
     Export cleaned data to Excel file using configuration settings.
-    
-    Parameters:
-    data (list of dict or DataFrame): The cleaned data to be exported.
-    
-    Returns:
-    str: The path to the saved Excel file.
+    Appends new data with timestamps rather than overwriting.
     """
     try:
         # Get configuration
         output_file = EXCEL_CONFIG.get('output_file', 'scraped_data.xlsx')
         sheet_name = EXCEL_CONFIG.get('sheet_name', 'Projects')
-        
-        # Add timestamp to filename if configured
-        use_timestamp = EXCEL_CONFIG.get('use_timestamp', False)
-        if use_timestamp:
-            base, ext = os.path.splitext(output_file)
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"{base}_{timestamp}{ext}"
         
         # Check if output directory is specified
         output_dir = EXCEL_CONFIG.get('output_dir', '')
@@ -207,11 +219,51 @@ def export_to_excel(data):
             os.makedirs(output_dir, exist_ok=True)
             output_file = os.path.join(output_dir, output_file)
         
-        # Save the data to Excel
-        save_to_excel(data, output_file, sheet_name)
+        # Convert to DataFrame if needed
+        if not isinstance(data, pd.DataFrame):
+            data = pd.DataFrame(data)
+            
+        # Check if file exists
+        if os.path.exists(output_file):
+            # Load existing workbook
+            try:
+                existing_df = pd.read_excel(output_file, sheet_name=sheet_name)
+                
+                # Add timestamp header row before new data
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                header_df = pd.DataFrame([{"Project Name": f"--- Data Collected on {timestamp} ---"}])
+                
+                # Set all other columns to empty in the header row
+                for col in data.columns:
+                    if col != "Project Name" and col in header_df.columns:
+                        header_df[col] = ""
+                
+                # Combine: existing data + timestamp header + new data
+                combined_df = pd.concat([existing_df, header_df, data], ignore_index=True)
+                
+                # Save the combined data
+                save_to_excel(combined_df, output_file, sheet_name)
+                
+            except Exception as e:
+                logging.error(f"Error reading existing Excel file: {str(e)}")
+                logging.warning("Creating new Excel file instead")
+                save_to_excel(data, output_file, sheet_name)
+        else:
+            # File doesn't exist, create new one with timestamp header
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            header_df = pd.DataFrame([{"Project Name": f"--- Data Collected on {timestamp} ---"}])
+            
+            # Set all other columns to empty in the header row
+            for col in data.columns:
+                if col != "Project Name" and col in header_df.columns:
+                    header_df[col] = ""
+            
+            # Combine header with data
+            combined_df = pd.concat([header_df, data], ignore_index=True)
+            save_to_excel(combined_df, output_file, sheet_name)
         
         return output_file
-    
+        
     except Exception as e:
         logging.error(f"Error in export_to_excel: {str(e)}")
         # Fallback to a simple filename in case of error
