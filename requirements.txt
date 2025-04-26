@@ -1,8 +1,11 @@
-requests
+# This file is used to install the required packages for the project.
+# It is recommended to use a virtual environment to avoid conflicts with other projects.
 beautifulsoup4
 pandas
-openpyxl
-schedule
 apscheduler
 lxml
 html5lib
+python-dotenv==1.0.0
+schedule==1.2.0
+openpyxl==3.1.2
+requests==2.31.0
