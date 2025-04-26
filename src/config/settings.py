@@ -17,11 +17,11 @@ except ImportError:
 
 # Email configuration
 EMAIL_CONFIG = {
-    'smtp_server': os.getenv('SMTP_SERVER', 'smtp.gmail.com'),
-    'smtp_port': int(os.getenv('SMTP_PORT', 587)),
-    'username': os.getenv('EMAIL_USERNAME', ''),
-    'password': os.getenv('EMAIL_PASSWORD', ''),  # IMPORTANT: Use app password!
-    'recipient': os.getenv('EMAIL_RECIPIENT', '')
+    'smtp_server': os.getenv('SMTP_SERVER'),
+    'smtp_port': int(os.getenv('SMTP_PORT', 587)),  # Default SMTP port for TLS
+    'username': os.getenv('EMAIL_USERNAME'),
+    'password': os.getenv('EMAIL_PASSWORD'),  # IMPORTANT: Use app password!
+    'recipient': os.getenv('EMAIL_RECIPIENT')
 }
 
 # Scheduling configuration
@@ -33,16 +33,16 @@ SCHEDULING_CONFIG = {
 
 # Excel file configuration
 EXCEL_CONFIG = {
-    'output_file': os.getenv('EXCEL_OUTPUT_FILE', 'scraped_data.xlsx'),  # Name of the output Excel file
-    'sheet_name': os.getenv('EXCEL_SHEET_NAME', 'Projects'),             # Name of the sheet in the Excel file
-    'use_timestamp': os.getenv('EXCEL_USE_TIMESTAMP', 'False').lower() == 'true',  # Add timestamp to filename
-    'output_dir': os.getenv('EXCEL_OUTPUT_DIR', 'collected_data')                  # Directory to save Excel files
+    'output_file': os.getenv('EXCEL_OUTPUT_FILE', 'scraped_data.xlsx'),
+    'sheet_name': os.getenv('EXCEL_SHEET_NAME', 'Projects'),
+    'use_timestamp': os.getenv('EXCEL_USE_TIMESTAMP', 'True').lower() == 'true',
+    'output_dir': os.getenv('EXCEL_OUTPUT_DIR', '/home/yourusername/web-scraper-tool/data')
 }
 
 # Logging configuration
 LOGGING_CONFIG = {
-    'log_file': os.getenv('LOG_FILE', os.path.join('logs', f'scraper_{datetime.now().strftime("%Y%m%d")}.log')),
-    'log_level': os.getenv('LOG_LEVEL', 'DEBUG')                          # Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    'log_file': os.getenv('LOG_FILE', '/home/yourusername/web-scraper-tool/logs/scraper.log'),
+    'log_level': os.getenv('LOG_LEVEL', 'INFO')
 }
 
 # Other configurations
