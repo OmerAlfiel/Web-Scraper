@@ -1,33 +1,284 @@
 {
   "websites": [
     {
-      "name": "Example Project 1",
-      "url": "https://www.example1.com",
+      "name": "Google Search",
+      "url": "https://www.google.com",
       "metadata": {
-        "type": "Type A",
-        "location": "Location A",
-        "contact_name": "Contact A",
-        "mobile_number": "123-456-7890"
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "Google LLC",
+        "mobile_number": "+1-650-253-0000"
       }
     },
     {
-      "name": "Example Project 2",
-      "url": "https://www.example2.com",
+      "name": "Bing",
+      "url": "https://www.bing.com",
       "metadata": {
-        "type": "Type B",
-        "location": "Location B",
-        "contact_name": "Contact B",
-        "mobile_number": "098-765-4321"
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "Microsoft Corporation",
+        "mobile_number": "+1-425-882-8080"
       }
     },
     {
-      "name": "Example Project 3",
-      "url": "https://www.example3.com",
+      "name": "DuckDuckGo",
+      "url": "https://www.duckduckgo.com",
       "metadata": {
-        "type": "Type C",
-        "location": "Location C",
-        "contact_name": "Contact C",
-        "mobile_number": "555-555-5555"
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "Duck Duck Go, Inc.",
+        "mobile_number": "+1-844-382-5352"
+      }
+    },
+    {
+      "name": "Yahoo",
+      "url": "https://www.yahoo.com",
+      "metadata": {
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "Yahoo Inc.",
+        "mobile_number": "+1-408-349-3300"
+      }
+    },
+    {
+      "name": "Baidu",
+      "url": "https://www.baidu.com",
+      "metadata": {
+        "type": "Search Engine",
+        "location": "China",
+        "contact_name": "Baidu, Inc.",
+        "mobile_number": "+86-10-5992-8888"
+      }
+    },
+    {
+      "name": "Yandex",
+      "url": "https://www.yandex.com",
+      "metadata": {
+        "type": "Search Engine",
+        "location": "Russia",
+        "contact_name": "Yandex N.V.",
+        "mobile_number": "+7-495-739-7000"
+      }
+    },
+    {
+      "name": "Ask.com",
+      "url": "https://www.ask.com",
+      "metadata": {
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "IAC Search & Media",
+        "mobile_number": "+1-212-314-7300"
+      }
+    },
+    {
+      "name": "AOL",
+      "url": "https://www.aol.com",
+      "metadata": {
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "Verizon Media Inc.",
+        "mobile_number": "+1-212-519-7000"
+      }
+    },
+  
+    {
+      "name": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Main_Page",
+      "metadata": {
+        "type": "Encyclopedia",
+        "location": "Global",
+        "contact_name": "Wikimedia Foundation",
+        "mobile_number": "Not available"
+      }
+    },
+    {
+      "name": "Google",
+      "url": "https://www.google.com",
+      "metadata": {
+        "type": "Search Engine",
+        "location": "Global",
+        "contact_name": "Google LLC",
+        "mobile_number": "+1-650-253-0000"
+      }
+    },
+    {
+      "name": "YouTube",
+      "url": "https://www.youtube.com",
+      "metadata": {
+        "type": "Video Sharing Platform",
+        "location": "Global",
+        "contact_name": "YouTube LLC",
+        "mobile_number": "+1-650-253-0000"
+      }
+    },
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "Meta Platforms, Inc.",
+        "mobile_number": "+1-650-543-4800"
+      }
+    },
+    {
+      "name": "Twitter",
+      "url": "https://www.twitter.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "Twitter, Inc.",
+        "mobile_number": "+1-415-222-9670"
+      }
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com",
+      "metadata": {
+        "type": "Professional Networking",
+        "location": "Global",
+        "contact_name": "LinkedIn Corporation",
+        "mobile_number": "+1-650-687-3600"
+      }
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "Meta Platforms, Inc.",
+        "mobile_number": "+1-650-543-4800"
+      }
+    },
+    {
+      "name": "Snapchat",
+      "url": "https://www.snapchat.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "Snap Inc.",
+        "mobile_number": "+1-310-399-3339"
+      }
+    },
+    {
+      "name": "Reddit",
+      "url": "https://www.reddit.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "Reddit, Inc.",
+        "mobile_number": "+1-415-798-2700"
+      }
+    },
+    {
+      "name": "Pinterest",
+      "url": "https://www.pinterest.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "Pinterest, Inc.",
+        "mobile_number": "+1-415-762-7100"
+      }
+    },
+    {
+      "name": "WhatsApp",
+      "url": "https://www.whatsapp.com",
+      "metadata": {
+        "type": "Messaging App",
+        "location": "Global",
+        "contact_name": "Meta Platforms, Inc.",
+        "mobile_number": "+1-650-543-4800"
+      }
+    },
+    {
+      "name": "Telegram",
+      "url": "https://telegram.org",
+      "metadata": {
+        "type": "Messaging App",
+        "location": "Global",
+        "contact_name": "Telegram Messenger LLP",
+        "mobile_number": "+44-20-8123-4567"
+      }
+    },
+    {
+      "name": "Viber",
+      "url": "https://www.viber.com",
+      "metadata": {
+        "type": "Messaging App",
+        "location": "Global",
+        "contact_name": "Viber Media S.à r.l.",
+        "mobile_number": "+1-646-741-2000"
+      }
+    },
+    {
+      "name": "Signal",
+      "url": "https://signal.org",
+      "metadata": {
+        "type": "Messaging App",
+        "location": "Global",
+        "contact_name": "Signal Foundation",
+        "mobile_number": "+1-415-555-0199"
+      }
+    },
+    {
+      "name": "TikTok",
+      "url": "https://www.tiktok.com",
+      "metadata": {
+        "type": "Social Media",
+        "location": "Global",
+        "contact_name": "ByteDance Ltd.",
+        "mobile_number": "+1-415-555-0199"
+      }
+    },
+    {
+      "name": "Spotify",
+      "url": "https://www.spotify.com",
+      "metadata": {
+        "type": "Music Streaming",
+        "location": "Global",
+        "contact_name": "Spotify Technology S.A.",
+        "mobile_number": "+1-646-827-1990"
+      }
+    },
+    {
+      "name": "Netflix",
+      "url": "https://www.netflix.com",
+      "metadata": {
+        "type": "Video Streaming",
+        "location": "Global",
+        "contact_name": "Netflix, Inc.",
+        "mobile_number": "+1-408-540-3700"
+      }
+    },
+    {
+      "name": "Amazon",
+      "url": "https://www.amazon.com",
+      "metadata": {
+        "type": "E-commerce",
+        "location": "Global",
+        "contact_name": "Amazon.com, Inc.",
+        "mobile_number": "+1-206-266-1000"
+      }
+    },
+    {
+      "name": "eBay",
+      "url": "https://www.ebay.com",
+      "metadata": {
+        "type": "E-commerce",
+        "location": "Global",
+        "contact_name": "eBay Inc.",
+        "mobile_number": "+1-408-376-7400"
+      }
+    },
+    {
+      "name": "Upwork",
+      "url": "https://www.upwork.com",
+      "metadata": {
+        "type": "Freelance Marketplace",
+        "location": "Global",
+        "contact_name": "Upwork Global Inc.",
+        "mobile_number": "+1-415-268-1234"
       }
     }
   ]
